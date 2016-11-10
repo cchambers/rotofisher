@@ -102,7 +102,7 @@ namespace UnityStandardAssets._2D
             if (thrust) {
                 m_Grounded = false;
                 m_Anim.SetBool("Ground", false);
-                m_Rigidbody2D.AddForce(new Vector2(0f, 100f));
+                m_Rigidbody2D.AddForce(new Vector2(0f, 200f));
             }
         }
 
