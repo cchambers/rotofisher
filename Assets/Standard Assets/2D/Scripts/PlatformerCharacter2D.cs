@@ -19,7 +19,7 @@ namespace UnityStandardAssets._2D
         private Animator m_Anim;            // Reference to the player's animator component.
         private Rigidbody2D m_Rigidbody2D;
         private bool m_FacingRight = true;  // For determining which way the player is currently facing.
-        const float thrustForce = 2;
+        const float thrustForce = 140f;
 
         private void Awake()
         {
@@ -102,8 +102,9 @@ namespace UnityStandardAssets._2D
             if (thrust) {
                 m_Grounded = false;
                 m_Anim.SetBool("Ground", false);
-                m_Rigidbody2D.AddForce(new Vector2(0f, 200f));
+                m_Rigidbody2D.AddForce(m_Rigidbody2D.transform.up * thrustForce);
             }
+           
         }
 
 

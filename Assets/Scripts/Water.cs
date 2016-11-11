@@ -71,8 +71,8 @@ public class Water : MonoBehaviour {
             Vector3 position = new Vector3(xpositions[index],ypositions[index]-0.35f,5);
 
             //This line aims the splash towards the middle. Only use for small bodies of water:
-            Quaternion rotation = Quaternion.LookRotation(new Vector3(xpositions[Mathf.FloorToInt(xpositions.Length / 2)], baseheight + 8, 5) - position);
-            
+            Quaternion rotation = Quaternion.LookRotation(new Vector3(0,0,0));
+
             //Create the splash and tell it to destroy itself.
             GameObject splish = Instantiate(splash,position,rotation) as GameObject;
             Destroy(splish, lifetime+0.3f);
