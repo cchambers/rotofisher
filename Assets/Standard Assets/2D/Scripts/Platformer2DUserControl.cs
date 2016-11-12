@@ -38,9 +38,10 @@ namespace UnityStandardAssets._2D
             // Read the inputs.
             bool crouch = Input.GetKey(KeyCode.LeftControl);
             bool thrust = Input.GetKey(KeyCode.UpArrow);
+            bool unthrust = Input.GetKey(KeyCode.DownArrow);
             float h = CrossPlatformInputManager.GetAxis("Horizontal");
             // Pass all parameters to the character control script.
-            m_Character.Move(h, crouch, m_Jump, thrust);
+            m_Character.Move(h, crouch, m_Jump, thrust, unthrust);
             m_Jump = false;
         }
     }

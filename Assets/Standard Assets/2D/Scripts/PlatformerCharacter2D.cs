@@ -19,7 +19,9 @@ namespace UnityStandardAssets._2D
         private Animator m_Anim;            // Reference to the player's animator component.
         private Rigidbody2D m_Rigidbody2D;
         private bool m_FacingRight = true;  // For determining which way the player is currently facing.
-        const float thrustForce = 140f;
+        const float thrustForce = 25f;
+        const float maxThrustForce = 300f;
+        private float thrustLevel = 0f;
 
         private void Awake()
         {
@@ -50,7 +52,7 @@ namespace UnityStandardAssets._2D
         }
 
 
-        public void Move(float move, bool crouch, bool jump, bool thrust)
+        public void Move(float move, bool crouch, bool jump, bool thrust, bool unthrust)
         {
             // If crouching, check to see if the character can stand up
             if (!crouch && m_Anim.GetBool("Crouch"))
@@ -102,8 +104,19 @@ namespace UnityStandardAssets._2D
             if (thrust) {
                 m_Grounded = false;
                 m_Anim.SetBool("Ground", false);
-                m_Rigidbody2D.AddForce(m_Rigidbody2D.transform.up * thrustForce);
+                thrustLevel = Mathf.Clamp(thrustLevel += thrustForce, 0, maxThrustForce);
+                m_Rigidbody2D.AddForce(m_Rigidbody2D.transform.up * thrustLevel);
+                Debug.Log("Thrusting:" + thrustLevel);
+            } else if (unthrust)
+            {
+                thrustLevel = Mathf.Clamp(thrustLevel -= thrustForce, 0, maxThrustForce);
+                m_Rigidbody2D.AddForce(m_Rigidbody2D.transform.up * thrustLevel);
+                Debug.Log("Thrusting:" + thrustLevel);
+
+            } else {
+                //m_Rigidbody2D.AddForce(m_Rigidbody2D.transform.up * thrustLevel);
             }
+
            
         }
 
