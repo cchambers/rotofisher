@@ -19,9 +19,15 @@ namespace UnityStandardAssets._2D
         private Animator m_Anim;            // Reference to the player's animator component.
         private Rigidbody2D m_Rigidbody2D;
         private bool m_FacingRight = true;  // For determining which way the player is currently facing.
-        const float thrustForce = 25f;
-        const float maxThrustForce = 300f;
+        const float thrustForce = 1f;
+        const float maxThrustForce = 50f;
         private float thrustLevel = 0f;
+        public float hoverThrust = 2f;
+
+        private float minX = 0;
+        private float maxX = 0;
+        private float minY = 0;
+        private float maxY = 0;
 
         private void Awake()
         {
@@ -30,6 +36,15 @@ namespace UnityStandardAssets._2D
             m_CeilingCheck = transform.Find("CeilingCheck");
             m_Anim = GetComponent<Animator>();
             m_Rigidbody2D = GetComponent<Rigidbody2D>();
+
+            float camDistance = Vector3.Distance(transform.position, Camera.main.transform.position);
+            Vector2 bottomCorner = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, camDistance));
+            Vector2 topCorner = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, camDistance));
+
+            minX = bottomCorner.x;
+            maxX = topCorner.x;
+            minY = bottomCorner.y;
+            maxY = topCorner.y;
         }
 
 
@@ -49,6 +64,20 @@ namespace UnityStandardAssets._2D
 
             // Set the vertical animation
             m_Anim.SetFloat("vSpeed", m_Rigidbody2D.velocity.y);
+
+            // Get current position
+            /* Vector3 pos = transform.position;
+
+            // Horizontal contraint
+            if (pos.x < minX) pos.x = minX;
+            if (pos.x > maxX) pos.x = maxX;
+
+            // vertical contraint
+            if (pos.y < minY) pos.y = minY;
+            if (pos.y > maxY) pos.y = maxY;
+
+            // Update position
+            transform.position = pos; */
         }
 
 
@@ -105,18 +134,12 @@ namespace UnityStandardAssets._2D
                 m_Grounded = false;
                 m_Anim.SetBool("Ground", false);
                 thrustLevel = Mathf.Clamp(thrustLevel += thrustForce, 0, maxThrustForce);
-                m_Rigidbody2D.AddForce(m_Rigidbody2D.transform.up * thrustLevel);
+                m_Rigidbody2D.AddForce(new Vector2(0f, hoverThrust + thrustLevel));
                 Debug.Log("Thrusting:" + thrustLevel);
-            } else if (unthrust)
-            {
-                thrustLevel = Mathf.Clamp(thrustLevel -= thrustForce, 0, maxThrustForce);
-                m_Rigidbody2D.AddForce(m_Rigidbody2D.transform.up * thrustLevel);
-                Debug.Log("Thrusting:" + thrustLevel);
-
             } else {
-                //m_Rigidbody2D.AddForce(m_Rigidbody2D.transform.up * thrustLevel);
+                thrustLevel = Mathf.Clamp(thrustLevel -= thrustForce, 0, maxThrustForce);
+                m_Rigidbody2D.AddForce(new Vector2(0f, hoverThrust));
             }
-
            
         }
 
